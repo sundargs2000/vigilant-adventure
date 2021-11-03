@@ -1,0 +1,32 @@
+
+   
+name: hello
+on:
+  workflow_dispatch:
+    inputs:
+      who:
+        description: 'Hello who?'
+        default: 'world'
+      let:
+        description: 'Dummy input'
+        default: 'dummy'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: Validate secret storage
+      shell: bash
+      env: 
+        repo_1: ${{ secrets.REPO_SECRET_1 }}
+        env_1: ${{ secrets.ENV_SECRET_1 }}
+        env_2: ${{ secrets.ENV_SECRET_2 }}
+      run:  |
+        test=$(echo $repo_1 | tr " " "-")
+        echo "Repo Secret: ${test}"
+        test=$(echo $env_1 | tr " " "-")
+        echo "Env Secret: ${test}"
+        test=$(echo $env_2 | tr " " "-")
+        echo "Another Env Secret: ${test}"
